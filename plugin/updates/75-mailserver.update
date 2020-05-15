@@ -1,0 +1,23 @@
+# Sub-tree to store mailserver configuration
+dn: cn=mailserver,cn=etc,$SUFFIX
+default: objectclass: top
+default: objectclass: nsContainer
+
+# Postfix configuration
+dn: cn=postfix,cn=mailserver,cn=etc,$SUFFIX
+default: objectclass: top
+default: objectclass: nsContainer
+default: objectclass: postfixConfiguration
+default: defaultMailboxTransport: lmtp:unix:private/dovecot-lmtp
+
+# Dovecot configuration
+dn: cn=dovecot,cn=mailserver,cn=etc,$SUFFIX
+default: objectclass: top
+default: objectclass: nsContainer
+default: objectclass: dovecotConfiguration
+default: defaultMailboxQuota: *:storage=1024M
+
+dn: cn=ipaConfig,cn=etc,$SUFFIX
+add:ipaUserObjectClasses: mailSenderEntity
+add:ipaUserObjectClasses: mailReceiverEntity
+add:ipaUserObjectClasses: mailboxEntity

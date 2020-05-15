@@ -1,0 +1,115 @@
+# 1.3.6.1.4.1.25725         OID of SOSETH
+# 1.3.6.1.4.1.25725.1       mailserver
+# 1.3.6.1.4.1.25725.1.1     LDAP attributes
+# 1.3.6.1.4.1.25725.1.2     LDAP objectclasses
+#
+# Attributes:
+# .1    primaryMail
+# .2    alias
+# .3    sendAlias
+# .4    virtualDomain
+# .5    mailboxQuota
+# .6    canSendExternally
+# .7    mailboxTransport
+# .8    canReceiveExternally
+# .9    defaultMailboxQuota
+# .10   defaultMailboxTransport
+#
+# Object classes:
+# .1    mailboxPerson (uubk/ldapmail; not used here)
+# .2    mailenabledGroup
+# .3    postfixConfiguration
+# .4    systemMailbox (uubk/ldapmail; not used here)
+# .5    mailSenderEntity
+# .6    mailReceiverEntity
+# .7    mailboxEntity
+# .8    dovecotConfiguration
+
+dn: cn=schema
+changetype: modify
+add: attributetypes
+attributetypes: ( 1.3.6.1.4.1.25725.1.1.1 NAME 'primaryMail'
+  DESC 'Canonical mail address for this user'
+  SUP mail
+  EQUALITY caseIgnoreIA5Match
+  SUBSTR caseIgnoreIA5SubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.26
+  SINGLE-VALUE )
+attributetypes: ( 1.3.6.1.4.1.25725.1.1.2 NAME 'alias'
+  DESC 'Mail alias for this user'
+  SUP mail
+  EQUALITY caseIgnoreIA5Match
+  SUBSTR caseIgnoreIA5SubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+attributetypes: ( 1.3.6.1.4.1.25725.1.1.3 NAME 'sendAlias'
+  DESC 'Allowed sender alias for this user'
+  EQUALITY caseIgnoreIA5Match
+  SUBSTR caseIgnoreIA5SubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.26 )
+attributetypes: ( 1.3.6.1.4.1.25725.1.1.4 NAME 'virtualDomain'
+  DESC 'Postfix virtual domain'
+  EQUALITY caseIgnoreMatch
+  SUBSTR caseIgnoreSubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.44 )
+attributetypes: ( 1.3.6.1.4.1.25725.1.1.5 NAME 'mailboxQuota'
+  DESC 'Mailbox quota rule for this user in Dovecot notation'
+  EQUALITY caseIgnoreMatch
+  SUBSTR caseIgnoreSubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+  SINGLE-VALUE )
+attributetypes: ( 1.3.6.1.4.1.25725.1.1.6 NAME 'canSendExternally'
+  DESC 'Allow sending mail to external destinations'
+  EQUALITY booleanMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+  SINGLE-VALUE )
+attributetypes: ( 1.3.6.1.4.1.25725.1.1.7 NAME 'mailboxTransport'
+  DESC 'Postfix mailbox transport method'
+  EQUALITY caseIgnoreMatch
+  SUBSTR caseIgnoreSubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+  SINGLE-VALUE )
+attributetypes: ( 1.3.6.1.4.1.25725.1.1.8 NAME 'canReceiveExternally'
+  DESC 'Allow receiving mail from external destinations'
+  EQUALITY booleanMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.7
+  SINGLE-VALUE )
+attributetypes: ( 1.3.6.1.4.1.25725.1.1.9 NAME 'defaultMailboxQuota'
+  DESC 'Default quota rule in Dovecot notation'
+  EQUALITY caseIgnoreMatch
+  SUBSTR caseIgnoreSubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+  SINGLE-VALUE )
+attributetypes: ( 1.3.6.1.4.1.25725.1.1.10 NAME 'defaultMailboxTransport'
+  DESC 'Default Postfix transport method'
+  EQUALITY caseIgnoreMatch
+  SUBSTR caseIgnoreSubstringsMatch
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+  SINGLE-VALUE )
+-
+add: objectClasses
+objectClasses: ( 1.3.6.1.4.1.25725.2.2.2 NAME 'mailenabledGroup'
+  DESC 'Group used as a mail alias'
+  SUP top AUXILIARY
+  MUST ( alias ) )
+objectClasses: ( 1.3.6.1.4.1.25725.2.2.3 NAME 'postfixConfiguration'
+  DESC 'General Postfix configuration'
+  SUP ( nsContainer ) STRUCTURAL
+  MAY ( virtualDomain $ defaultMailboxTransport) )
+objectClasses: ( 1.3.6.1.4.1.25725.2.2.5 NAME 'mailSenderEntity'
+  DESC 'Entity which can send mails'
+  SUP top AUXILIARY
+  MUST ( primaryMail $ canSendExternally )
+  MAY ( sendAlias ) )
+objectClasses: ( 1.3.6.1.4.1.25725.2.2.6 NAME 'mailReceiverEntity'
+  DESC 'Entity which can receive mails'
+  SUP top AUXILIARY
+  MUST ( primaryMail $ canReceiveExternally $ mailboxTransport )
+  MAY ( alias ) )
+objectClasses: ( 1.3.6.1.4.1.25725.2.2.7 NAME 'mailboxEntity'
+  DESC 'Entity which has a mailbox'
+  SUP top AUXILIARY
+  MUST ( uid $ mailboxQuota ) )
+objectClasses: ( 1.3.6.1.4.1.25725.2.2.8 NAME 'dovecotConfiguration'
+  DESC 'General Dovecot configuration'
+  SUP ( nsContainer ) STRUCTURAL
+  MAY ( defaultMailboxQuota ) )
