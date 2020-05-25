@@ -9,7 +9,7 @@ The LDAP schema allows the configuration of:
   
 The schema was intentionally kept quite abstract so multiple use cases can satisfied.
 The main object classes `mailSenderEntity`, `mailReceiverEntity` and `mailboxEntity` can separately be assigned to a
-user or host object whereas hosts most likely only should have `mailReceiverEntity` assigned.
+user or host object whereas hosts most likely only should have `mailSenderEntity` assigned.
 
 An Ansible role which sets up Dovecot and Postfix the right way can be found at
 [SOSETH/mailserver](https://github.com/SOSETH/mailserver).
