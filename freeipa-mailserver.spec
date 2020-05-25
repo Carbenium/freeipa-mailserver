@@ -10,7 +10,7 @@ Summary:        Mail server integration for FreeIPA
 
 BuildArch:      noarch
 
-License:        MIT
+License:        GPLv3+
 URL:            https://github.com/SOSETH/freeipa-mailserver
 Source0:        freeipa-mailserver-%{version}.tar.gz
 
