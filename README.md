@@ -1,4 +1,7 @@
 # freeipa-mailserver
+
+![CI](https://github.com/SOSETH/freeipa-mailserver/workflows/CI/badge.svg)
+
 A FreeIPA extension to handle the configuration of a Postfix/Dovecot mail server setup.
 
 The LDAP schema allows the configuration of:
