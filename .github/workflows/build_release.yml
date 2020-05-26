@@ -1,0 +1,34 @@
+name: Build release
+
+on:
+  push:
+    tags:
+      - freeipa-mailserver-*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: fedora:32
+
+    steps:
+    - name: Install build tools
+      run: dnf install -y git tito
+
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+
+    - name: Install build dependencies
+      run: dnf builddep -y $GITHUB_WORKSPACE/freeipa-mailserver.spec
+
+    - name: Build rpm
+      run: |
+        cd $GITHUB_WORKSPACE
+        tito build --rpm -o .
+
+    - name: Test installation of built rpm
+      run: dnf install -y noarch/*.rpm
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: rpms
+        path: ${{ github.workspace }}/noarch/*.rpm
