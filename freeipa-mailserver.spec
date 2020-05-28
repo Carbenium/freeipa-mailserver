@@ -4,7 +4,7 @@
 %global ipa_python3_sitelib %{python3_sitelib}
 
 Name:           freeipa-%{plugin_name}
-Version:        0.1.0
+Version:        0.2.0
 Release:        1%{?dist}
 Summary:        Mail server integration for FreeIPA
 
@@ -97,6 +97,9 @@ fi
 %ipa_python3_sitelib/ipaserver/plugins/*
 
 %changelog
+* Fri May 29 2020 Peter Keresztes Schmidt <peterke@sos.ethz.ch> 0.2.0-1
+- Add command to migrate users to mail system (peterke@sos.ethz.ch)
+
 * Wed May 27 2020 Peter Keresztes Schmidt <peterke@sos.ethz.ch> 0.1.0-1
 - Initial release
 
