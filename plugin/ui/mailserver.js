@@ -97,6 +97,15 @@ define([
             };
 
             facet.sections.push(mail_section);
+
+            facet.actions.push({
+                $factory: IPA.object_action,
+                name: 'migrate_mail',
+                method: 'migrate_mail',
+                label: 'Migrate mail attributes',
+                disable_cond: ['oc_mailsenderentity', 'oc_mailreceiverentity', 'oc_mailboxentity']
+            });
+            facet.header_actions.push('migrate_mail');
         };
 
         mail_server.user_override = function () {

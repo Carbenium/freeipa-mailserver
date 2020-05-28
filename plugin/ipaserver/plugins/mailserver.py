@@ -19,6 +19,10 @@ Configure mailboxes and mail routing.
 register = Registry()
 
 
+class MailAlreadyMigratedError(errors.GenericError):
+    format = _("Mail attributes for this entry were already migrated.")
+
+
 def normalize_and_validate_email(email, config):
     # check if default email domain should be added
     defaultdomain = config.get('ipadefaultemaildomain', [None])[0]
@@ -209,11 +213,15 @@ user_add.register_post_callback(useradd_post_callback)
 
 
 def usermod_pre_callback(self, ldap, dn, entry_attrs, attrs_list, *keys, **options):
-    add_missing_object_class(ldap, 'mailSenderEntity', dn, update=False)
-    add_missing_object_class(ldap, 'mailReceiverEntity', dn, update=False)
-    add_missing_object_class(ldap, 'mailboxEntity', dn, update=False)
+    if 'objectclass' in entry_attrs:
+        obj_classes = entry_attrs['objectclass']
+    else:
+        obj_classes = ldap.get_entry(dn, ['objectclass'])['objectclass']
 
-    normalize_mail_attrs(entry_attrs)
+    mail_obj_classes = {'mailsenderentity', 'mailreceiverentity'}
+
+    if mail_obj_classes.intersection(obj_classes):
+        normalize_mail_attrs(entry_attrs)
 
     if 'mailboxquota' in entry_attrs:
         quota_str = '*:storage={}M'.format(entry_attrs['mailboxquota'])
@@ -237,6 +245,38 @@ def usermod_post_callback(self, ldap, dn, entry_attrs, *keys, **options):
 
 
 user_mod.register_post_callback(usermod_post_callback)
+
+
+@register()
+class user_migrate_mail(LDAPUpdate):
+    def pre_callback(self, ldap, dn, entry_attrs, attrs_list, *keys, **options):
+        _entry_attrs = ldap.get_entry(dn, ['objectclass', 'mail'])
+        obj_classes = entry_attrs['objectclass'] = _entry_attrs['objectclass']
+
+        mail_obj_classes = {'mailsenderentity', 'mailreceiverentity', 'mailboxentity'}
+
+        if mail_obj_classes.intersection(obj_classes):
+            raise MailAlreadyMigratedError
+
+        entry_attrs['objectclass'].extend(mail_obj_classes.difference(obj_classes))
+
+        normalize_mail_attrs(_entry_attrs)
+        entry_attrs['mail'] = _entry_attrs['mail']
+        entry_attrs['primarymail'] = _entry_attrs['primarymail']
+
+        dovecot_config = self.api.Command['dovecotconfig_show'](all=True, raw=True)['result']
+        quota = int(dovecot_config.get('defaultmailboxquota')[0])
+        quota_str = '*:storage={}M'.format(quota)
+        entry_attrs['mailboxquota'] = quota_str
+
+        postfix_config = self.api.Command['postfixconfig_show'](all=True, raw=True)['result']
+        entry_attrs['mailboxtransport'] = postfix_config.get('defaultmailboxtransport')
+
+        entry_attrs['canreceiveexternally'] = entry_attrs.get('canreceiveexternally', True)
+        entry_attrs['cansendexternally'] = entry_attrs.get('cansendexternally', True)
+
+        return dn
+
 
 group.takes_params += (
     Str('alias*',
