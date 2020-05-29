@@ -4,8 +4,8 @@
 %global ipa_python3_sitelib %{python3_sitelib}
 
 Name:           freeipa-%{plugin_name}
-Version:        0.2.0
-Release:        2%{?dist}
+Version:        0.2.1
+Release:        1%{?dist}
 Summary:        Mail server integration for FreeIPA
 
 BuildArch:      noarch
@@ -97,6 +97,9 @@ fi
 %ipa_python3_sitelib/ipaserver/plugins/*
 
 %changelog
+* Fri May 29 2020 Peter Keresztes Schmidt <peterke@sos.ethz.ch> 0.2.1-1
+- Fix comparison of object classes (peterke@sos.ethz.ch)
+
 * Fri May 29 2020 Peter Keresztes Schmidt <peterke@sos.ethz.ch> 0.2.0-2
 - CI: Run tito in offline mode for release builds (peterke@sos.ethz.ch)
 
