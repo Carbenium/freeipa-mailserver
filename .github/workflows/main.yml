@@ -2,6 +2,10 @@ name: CI
 
 on:
   push:
+    branches:
+      - '*'
+    tags-ignore:
+      - freeipa-mailserver-*
   pull_request:
     branches: [ master ]
 
