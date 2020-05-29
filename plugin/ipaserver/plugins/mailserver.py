@@ -218,6 +218,7 @@ def usermod_pre_callback(self, ldap, dn, entry_attrs, attrs_list, *keys, **optio
     else:
         obj_classes = ldap.get_entry(dn, ['objectclass'])['objectclass']
 
+    obj_classes = [o.lower() for o in obj_classes]
     mail_obj_classes = {'mailsenderentity', 'mailreceiverentity'}
 
     if mail_obj_classes.intersection(obj_classes):
@@ -253,6 +254,7 @@ class user_migrate_mail(LDAPUpdate):
         _entry_attrs = ldap.get_entry(dn, ['objectclass', 'mail'])
         obj_classes = entry_attrs['objectclass'] = _entry_attrs['objectclass']
 
+        obj_classes = [o.lower() for o in obj_classes]
         mail_obj_classes = {'mailsenderentity', 'mailreceiverentity', 'mailboxentity'}
 
         if mail_obj_classes.intersection(obj_classes):
@@ -334,7 +336,7 @@ class group_enable_mail(LDAPQuery):
         dn = self.obj.get_dn(*args, **kw)
         entry = self.obj.backend.get_entry(dn, ['objectclass'])
 
-        if 'mailenabledgroup' not in entry['objectclass']:
+        if 'mailenabledgroup' not in [o.lower() for o in entry['objectclass']]:
             entry['objectclass'].append('mailenabledgroup')
         else:
             raise errors.AlreadyActive()
@@ -360,14 +362,13 @@ class group_disable_mail(LDAPQuery):
         dn = self.obj.get_dn(*args, **kw)
         entry = self.obj.backend.get_entry(dn, ['objectclass', 'alias'])
 
-        if 'mailenabledgroup' in entry['objectclass']:
+        if 'mailenabledgroup' in [o.lower() for o in entry['objectclass']]:
             try:
                 del entry['alias']
             except KeyError:
                 pass
 
-            while 'mailenabledgroup' in entry['objectclass']:
-                entry['objectclass'].remove('mailenabledgroup')
+            entry['objectclass'].remove('mailenabledgroup')
         else:
             raise errors.AlreadyInactive()
 
@@ -419,7 +420,6 @@ def hostadd_pre_callback(self, ldap, dn, entry_attrs, attrs_list, *keys, **optio
         entry_attrs.update(add_missing_object_class(ldap, 'mailsenderentity', dn, entry_attrs, update=False))
         if 'primarymail' not in entry_attrs:
             config = ldap.get_ipa_config()
-            # hostname = ldap.get_entry(dn, ['serverhostname']).get('serverhostname')
             entry_attrs['primarymail'] = normalize_and_validate_email(entry_attrs['serverhostname'], config)
 
         entry_attrs['cansendexternally'] = entry_attrs.get('cansendexternally', False)
@@ -456,7 +456,7 @@ class host_enable_mail(LDAPQuery):
         dn = self.obj.get_dn(*args, **kw)
         entry = self.obj.backend.get_entry(dn, ['objectclass', 'serverhostname'])
 
-        if 'mailsenderentity' not in entry['objectclass']:
+        if 'mailsenderentity' not in [o.lower() for o in entry['objectclass']]:
             entry['objectclass'].append('mailsenderentity')
         else:
             raise errors.AlreadyActive()
@@ -491,7 +491,7 @@ class host_disable_mail(LDAPQuery):
         dn = self.obj.get_dn(*args, **kw)
         entry = self.obj.backend.get_entry(dn, ['objectclass', 'primarymail', 'cansendexternally'])
 
-        if 'mailsenderentity' in entry['objectclass']:
+        if 'mailsenderentity' in [o.lower() for o in entry['objectclass']]:
             try:
                 del entry['primarymail']
             except KeyError:
@@ -502,7 +502,7 @@ class host_disable_mail(LDAPQuery):
             except KeyError:
                 pass
 
-            while 'mailsenderentity' in entry['objectclass']:
+            while 'mailsenderentity' in [o.lower() for o in entry['objectclass']]:
                 entry['objectclass'].remove('mailsenderentity')
         else:
             raise errors.AlreadyInactive()
