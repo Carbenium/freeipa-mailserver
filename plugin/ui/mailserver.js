@@ -240,7 +240,7 @@ define([
         };
 
         mail_server.add_menu = function () {
-            if (!IPA.is_selfservice) {
+            if (IPA.is_selfservice === false) {
                 menu.add_item({
                         name: 'mailserver',
                         label: 'Mail Server',
