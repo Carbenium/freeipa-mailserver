@@ -4,7 +4,7 @@
 %global ipa_python3_sitelib %{python3_sitelib}
 
 Name:           freeipa-%{plugin_name}
-Version:        0.2.1
+Version:        0.2.2
 Release:        1%{?dist}
 Summary:        Mail server integration for FreeIPA
 
@@ -97,6 +97,9 @@ fi
 %ipa_python3_sitelib/ipaserver/plugins/*
 
 %changelog
+* Tue Jun 09 2020 Peter Keresztes Schmidt <peterke@sos.ethz.ch> 0.2.2-1
+- WebUI: Fix plugin throwing error in run_simple mode (peterke@sos.ethz.ch)
+
 * Fri May 29 2020 Peter Keresztes Schmidt <peterke@sos.ethz.ch> 0.2.1-1
 - Fix comparison of object classes (peterke@sos.ethz.ch)
 
