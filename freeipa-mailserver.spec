@@ -4,7 +4,7 @@
 %global ipa_python3_sitelib %{python3_sitelib}
 
 Name:           freeipa-%{plugin_name}
-Version:        0.2.2
+Version:        0.2.3
 Release:        1%{?dist}
 Summary:        Mail server integration for FreeIPA
 
@@ -97,6 +97,10 @@ fi
 %ipa_python3_sitelib/ipaserver/plugins/*
 
 %changelog
+* Sat Sep 12 2020 Peter Keresztes Schmidt <peterke@sos.ethz.ch> 0.2.3-1
+- Make sure we don't try to call the config mod commands with a PK
+  (peterke@sos.ethz.ch)
+
 * Tue Jun 09 2020 Peter Keresztes Schmidt <peterke@sos.ethz.ch> 0.2.2-1
 - WebUI: Fix plugin throwing error in run_simple mode (peterke@sos.ethz.ch)
 
