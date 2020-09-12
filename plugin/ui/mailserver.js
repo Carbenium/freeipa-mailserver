@@ -29,6 +29,7 @@ define([
 
         mail_server.postfixconfig_spec = {
             name: 'postfixconfig',
+            defines_key: false,
             facets: [
                 {
                     $type: 'details',
@@ -48,6 +49,7 @@ define([
 
         mail_server.dovecot_config_spec = {
             name: 'dovecotconfig',
+            defines_key: false,
             facets: [
                 {
                     $type: 'details',
