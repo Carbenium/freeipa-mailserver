@@ -5,7 +5,7 @@
 
 Name:           freeipa-%{plugin_name}
 Version:        0.2.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Mail server integration for FreeIPA
 
 BuildArch:      noarch
@@ -97,6 +97,9 @@ fi
 %ipa_python3_sitelib/ipaserver/plugins/*
 
 %changelog
+* Sun Dec 06 2020 Peter Keresztes Schmidt <peterke@sos.ethz.ch> 0.2.3-2
+- CI: switch to F33 (peterke@sos.ethz.ch)
+
 * Sat Sep 12 2020 Peter Keresztes Schmidt <peterke@sos.ethz.ch> 0.2.3-1
 - Make sure we don't try to call the config mod commands with a PK
   (peterke@sos.ethz.ch)
