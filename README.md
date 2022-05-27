@@ -1,6 +1,6 @@
 # freeipa-mailserver
 
-![CI](https://github.com/SOSETH/freeipa-mailserver/workflows/CI/badge.svg)
+[![CI](https://github.com/Carbenium/freeipa-mailserver/actions/workflows/main.yml/badge.svg)](https://github.com/Carbenium/freeipa-mailserver/actions/workflows/main.yml)
 
 A FreeIPA extension to handle the configuration of a Postfix/Dovecot mail server setup.
 
@@ -19,13 +19,13 @@ An Ansible role which sets up Dovecot and Postfix the right way can be found at
 
 ## Build
 [Tito](https://github.com/rpm-software-management/tito) can be used to build the rpm packages from the git repository.
-RPM artifacts can also be downloaded from the [CI process](https://github.com/SOSETH/freeipa-mailserver/actions).
+RPM artifacts can also be downloaded from the [CI process](https://github.com/Carbenium/freeipa-mailserver/actions).
 
 Basic instructions for Fedora:
 ```
 dnf install tito
 
-git clone git@github.com:SOSETH/freeipa-mailserver.git
+git clone git@github.com:Carbenium/freeipa-mailserver.git
 
 cd freeipa-mailserver
 tito build --test --rpm -o .
