@@ -19,13 +19,15 @@ jobs:
       run: dnf install -y git tito
 
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Install build dependencies
       run: dnf builddep -y $GITHUB_WORKSPACE/freeipa-mailserver.spec
 
     - name: Build rpm
       run: |
+        # Fix for: https://github.com/actions/checkout/issues/766 (git CVE-2022-24765)
+        git config --global --add safe.directory "$GITHUB_WORKSPACE"
         cd $GITHUB_WORKSPACE
         tito build --test --rpm -o .
 
