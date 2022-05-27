@@ -5,7 +5,7 @@
 
 Name:           freeipa-%{plugin_name}
 Version:        0.2.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Mail server integration for FreeIPA
 
 BuildArch:      noarch
@@ -97,6 +97,11 @@ fi
 %ipa_python3_sitelib/ipaserver/plugins/*
 
 %changelog
+* Fri May 27 2022 Peter Keresztes Schmidt <carbenium@outlook.com> 0.2.3-3
+- CI: fix failure due to git's new safe directory behaviour
+  (carbenium@outlook.com)
+- CI: switch to F35 (carbenium@outlook.com)
+
 * Sun Dec 06 2020 Peter Keresztes Schmidt <peterke@sos.ethz.ch> 0.2.3-2
 - CI: switch to F33 (peterke@sos.ethz.ch)
 
