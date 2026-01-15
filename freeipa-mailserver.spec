@@ -5,7 +5,7 @@
 
 Name:           freeipa-%{plugin_name}
 Version:        0.2.3
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Mail server integration for FreeIPA
 
 BuildArch:      noarch
@@ -97,6 +97,9 @@ fi
 %ipa_python3_sitelib/ipaserver/plugins/*
 
 %changelog
+* Thu Jan 15 2026 Peter Keresztes Schmidt <carbenium@outlook.com> 0.2.3-6
+- CI: switch to F42 (carbenium@outlook.com)
+
 * Thu Jan 15 2026 Peter Keresztes Schmidt <carbenium@outlook.com> 0.2.3-5
 - CI: update actions (carbenium@outlook.com)
 - CI: switch to F41 (carbenium@outlook.com)
